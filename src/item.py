@@ -1,13 +1,52 @@
+class Parametr:
+    
+    @classmethod
+    def __verify_param(cls, name: str, param) -> None:
+        
+        if name == "_name":
+            if not isinstance(param, str):
+                raise TypeError("Параметр 'Имя' ожидал строку")
+            
+        if name == "_price":
+            if not isinstance(param, float):
+                raise TypeError("Параметр 'Цена' ожидал цисло с плавающей точкой")
+            if param <= 0.0:
+                raise ValueError("Параметр 'Цена' не может быть ноль или меньше нуля")
+            
+        if name == "_quantity":
+            if not isinstance(param, int):
+                raise TypeError("Параметр 'Количество' ожидал цисло")
+            if param < 0:
+                raise ValueError("Параметр 'Количество' не может быть меньше нуля")
+    
+    def __set_name__(self, owner, name: str) -> None:
+        self.name = "_" + name
+        
+    def __get__(self, instance, owner) -> (str|float|int):
+        return getattr(instance, self.name)
+    
+    def __set__(self, instance, value) -> None:
+        self.__verify_param(self.name, value)
+        setattr(instance, self.name, value)
+            
+            
+
 class Item:
     """
     Класс для представления товара в магазине.
     """
     pay_rate = 1.0
     all = []
+    
+    name = Parametr()
+    price = Parametr()
+    quantity = Parametr()
+
 
     def __new__(cls, *args, **kwargs):
         cls.all.append(super().__new__(cls))
         return cls.all[-1]
+    
         
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """
@@ -21,53 +60,7 @@ class Item:
         self.name = name
         self.price = price
         self.quantity = quantity
-
-    @classmethod
-    def __validate_name(cls, name):
-        if not isinstance(name, str):
-            raise TypeError("Параметр 'Имя' ожидал строку")
-        
-    @classmethod
-    def __validate_price(cls, price):
-        if not isinstance(price, float):
-            raise TypeError("Параметр 'Цена' ожидал цисло с плавающей точкой")
-        if price <= 0.0:
-            raise ValueError("Параметр 'Цена' не может быть ноль или меньше нуля")
-        
-    @classmethod
-    def __validate_quantity(cls, quantity):
-        if not isinstance(quantity, int):
-            raise TypeError("Параметр 'Количество' ожидал цисло")
-        if quantity < 0:
-            raise ValueError("Параметр 'Количество' не может быть меньше нуля")
-        
-    @property
-    def name(self):
-        return self.__name
-    
-    @name.setter
-    def name(self, name):
-        self.__validate_name(name)
-        self.__name = name
-        
-        
-    @property
-    def price(self):
-        return self.__price
-    
-    @price.setter
-    def price(self, price):
-        self.__validate_price(price)
-        self.__price = price
-        
-    @property
-    def quantity(self):
-        return self.__quantity
-    
-    @quantity.setter
-    def quantity(self, quantity):
-        self.__validate_quantity(quantity)
-        self.__quantity = quantity
+     
         
     def calculate_total_price(self) -> float:
         """
@@ -75,10 +68,13 @@ class Item:
 
         :return: Общая стоимость товара.
         """
-        pass
+        __summary_price = self._price * self._quantity
+        return __summary_price
+    
 
     def apply_discount(self) -> None:
         """
         Применяет установленную скидку для конкретного товара.
         """
         pass
+    

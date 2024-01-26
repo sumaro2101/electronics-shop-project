@@ -53,7 +53,13 @@ class TestAll:
         
         
     @pytest.mark.xfail
-    def test_duck_check_in_all(self, items):
+    def test_duck_check_in_all1(self, items):
         assert items[0].name == items.name[1]
+        
+    @pytest.mark.xfail
+    def test_duck_check_in_all2(self, items):    
         assert items[1].price == items.price[0]
+        
+    @pytest.mark.xfail
+    def test_duck_check_in_all3(self, items):
         assert items[2].quantity == items.quantity[1]
