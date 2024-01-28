@@ -13,7 +13,7 @@ class TestCalculate:
         Args:
             items (fixture): инициализация трех элементов
         """        
-        
+        print(items[0].price)
         assert items[2].calculate_total_price() == 9.0
         assert items[1].calculate_total_price() == 4.0
         assert items[0].calculate_total_price() == 1.0
