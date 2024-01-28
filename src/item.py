@@ -15,17 +15,17 @@ class Parametr:
             _quantity проверят цисло и значение меньше нуля
         """        
         
-        if name == "_name":
+        if name == "__name":
             if not isinstance(param, str):
                 raise TypeError("Параметр 'Имя' ожидал строку")
             
-        if name == "_price":
+        if name == "__price":
             if not isinstance(param, int|float):
                 raise TypeError("Параметр 'Цена' ожидал цисло с плавающей точкой или целое число")
             if param <= 0.0:
                 raise ValueError("Параметр 'Цена' не может быть ноль или меньше нуля")
             
-        if name == "_quantity":
+        if name == "__quantity":
             if not isinstance(param, int):
                 raise TypeError("Параметр 'Количество' ожидал цисло")
             if param < 0:
@@ -35,7 +35,7 @@ class Parametr:
     def __set_name__(self, owner, name: str) -> None:
         """Модифицирует имя поля для инкапсуляции
         """        
-        self.name = "_" + name
+        self.name = "__" + name
         
         
     def __get__(self, instance, owner) -> (str|float|int):
@@ -101,7 +101,7 @@ class Item:
 
         :return: Общая стоимость товара.
         """
-        __summary_price = self._price * self._quantity
+        __summary_price = self.price * self.quantity
         return __summary_price
     
 
@@ -111,5 +111,5 @@ class Item:
         """
         
         self.__validate_discount(self.pay_rate)
-        self._price *= self.pay_rate
+        self.price *= self.pay_rate
     
