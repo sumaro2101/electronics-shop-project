@@ -12,6 +12,8 @@ class TestCsv:
         """      
           
         Item.instantiate_from_csv(csv_file)
+        for i in Item.all:
+            print(i.name)
         assert len(Item.all) == 3
         
         

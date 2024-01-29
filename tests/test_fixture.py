@@ -22,7 +22,7 @@ class TestFixture:
             init_item (fixture): инициализированный тестовый класс
         """     
            
-        assert init_item.price == 55.5
+        assert init_item.price == 55
         
     
     def test_fixture_quantity(self, init_item):

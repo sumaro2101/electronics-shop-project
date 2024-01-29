@@ -1,5 +1,5 @@
 from csv import DictReader
-
+from math import floor
 class Parametr:
     """Дексриптор данных
     """    
@@ -48,8 +48,7 @@ class Parametr:
             
         self.__verify_param(self.name, value)
         setattr(instance, self.name, value)
-            
-            
+              
 
 class Item:
     """
@@ -78,8 +77,8 @@ class Item:
         """
          
         self.name = name
-        self.price = price
-        self.quantity = quantity
+        self.price = self.string_to_number(price)
+        self.quantity = self.string_to_number(quantity)
         
      
     @classmethod
@@ -119,7 +118,8 @@ class Item:
     def instantiate_from_csv(cls, csv):
         with open(csv, 'r+t') as f:
             file = DictReader(f)
-            [(cls(item['name'], float(item['price']), int(item['quantity']))) for item in file]
+            cls.all = []
+            [(cls(item['name'], item['price'], item['quantity'])) for item in file]
         
         
     @property
@@ -149,3 +149,17 @@ class Item:
         self.__validate_discount(self.pay_rate)
         self.price *= self.pay_rate
     
+    @staticmethod
+    def string_to_number(string: str):
+        if not isinstance(string, str):
+            raise TypeError("Функция ожидала строку")
+        
+        if not string.isdigit():
+            try:
+                float(string)
+                return floor(float(string))
+            
+            except ValueError:
+                "Функция ожидала цифру в виде строки"
+        
+        return int(string)
