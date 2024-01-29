@@ -1,4 +1,5 @@
 import pytest
+from csv import DictReader
 
 @pytest.mark.fixture
 class TestFixture:
@@ -33,4 +34,8 @@ class TestFixture:
            
         assert init_item.quantity == 10
         
+    def test_fixture_csv(self, csv_file):
+        with csv_file.open() as f:
+            file = DictReader(f)
+            assert list(file)[0]['name'] == 'myrandom'
         

@@ -1,3 +1,5 @@
+from csv import DictReader
+
 class Parametr:
     """Дексриптор данных
     """    
@@ -111,6 +113,14 @@ class Item:
             return correct_name 
         
         return name
+        
+        
+    @classmethod
+    def instantiate_from_csv(cls, csv):
+        with open(csv, 'r+t') as f:
+            file = DictReader(f)
+            [(cls(item['name'], float(item['price']), int(item['quantity']))) for item in file]
+        
         
     @property
     def name(self) -> str:
