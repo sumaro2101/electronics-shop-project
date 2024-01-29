@@ -10,15 +10,10 @@ class Parametr:
             name (str): имя поля
             param (any): значение поспающее в поле
             
-            _name проверяет строку
             _price проверят цисло и дробь а так же значение меньше нуля
             _quantity проверят цисло и значение меньше нуля
         """        
-        
-        if name == "__name":
-            if not isinstance(param, str):
-                raise TypeError("Параметр 'Имя' ожидал строку")
-            
+                
         if name == "__price":
             if not isinstance(param, int|float):
                 raise TypeError("Параметр 'Цена' ожидал цисло с плавающей точкой или целое число")
@@ -62,7 +57,6 @@ class Item:
     pay_rate = 1.0
     all = []
     
-    name = Parametr()
     price = Parametr()
     quantity = Parametr()
 
@@ -80,7 +74,7 @@ class Item:
         :param price: Цена за единицу товара.
         :param quantity: Количество товара в магазине.
         """
-                
+         
         self.name = name
         self.price = price
         self.quantity = quantity
@@ -93,8 +87,40 @@ class Item:
         
         if cof < 0:
             raise ValueError("Скидка: Ожидалось значение больше нуля")
+    
+    
+    @classmethod
+    def __validate_name(cls, name: str) -> (str):
+        """Валидация данных на строку и длину меньше 10 символов
+
+        Args:
+            name (str): Получает данные для обработки
+
+        Raises:
+            TypeError: Если не строка возращает исключение
+
+        Returns:
+            str: Возращает обработанный объект в случае если длина больше 10
+        """  
+              
+        if not isinstance(name, str):
+            raise TypeError("Параметр name должен быть строкой")
         
+        if  len(name) > 10:
+            correct_name = "".join(name[:10])
+            return correct_name 
         
+        return name
+        
+    @property
+    def name(self) -> str:
+        return self.__name
+    
+    @name.setter
+    def name(self, name: str):
+        self.__name = self.__validate_name(name)
+
+
     def calculate_total_price(self) -> float:
         """
         Рассчитывает общую стоимость конкретного товара в магазине.

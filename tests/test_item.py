@@ -26,6 +26,17 @@ class TestItemProperty:
         
         with pytest.raises(TypeError):
             init_item.name = 423
+       
+            
+    def test_len_name(self, init_item):
+        """Тест на корректировку имени если оно больше чем 10 символов
+
+        Args:
+            init_item (fixture): инициализированный класс
+        """  
+              
+        init_item.name = "myfirstnameisnone"
+        assert init_item.name == "myfirstnam"
             
         
     def test_property_price(self, init_item):
@@ -111,7 +122,7 @@ class TestItemProperty:
             
             
     def test_result(self, init_item):
-        assert init_item.name == "full_test"
+        assert init_item.name == "myfirstnam"
         assert init_item.price == 44.4
         assert init_item.quantity == 0
     
