@@ -151,6 +151,9 @@ class Item:
     
     @staticmethod
     def string_to_number(string: str):
+        if isinstance(string, int):
+            return string
+        
         if not isinstance(string, str):
             raise TypeError("Функция ожидала строку")
         
