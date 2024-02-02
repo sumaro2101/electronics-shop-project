@@ -91,6 +91,7 @@ class Item:
     
     pay_rate = 1.0
     all = []
+    
     name = Parametr()
     price = Parametr()
     quantity = Parametr()
@@ -138,6 +139,7 @@ class Item:
 
         :return: Общая стоимость товара.
         """
+        
         __summary_price = self.price * self.quantity
         return __summary_price
     
@@ -168,3 +170,9 @@ class Item:
                 "Функция ожидала цифру в виде строки"
         
         return int(string)
+
+    def __str__(self) -> str:
+        return f"{self.name}"
+    
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}('{self.name}', {self.price}, {self.quantity})"
