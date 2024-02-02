@@ -1,41 +1,67 @@
 from csv import DictReader
 from math import floor
+from typing import Any
+
 class Parametr:
     """Дексриптор данных
     """    
     
     @classmethod
-    def __verify_param(cls, name: str, param) -> None:
+    def __verify_name(cls, param: Any) -> None| str:
         """Верификация данных поступаемых в параметры класса
 
         Args:
-            name (str): имя поля
-            param (any): значение поспающее в поле
+            param (any): значение поступающее в поле
             
-            _price проверят цисло и дробь а так же значение меньше нуля
-            _quantity проверят цисло и значение меньше нуля
-        """        
-                
-        if name == "__price":
-            if not isinstance(param, int|float):
+            __name проверяет стороку"""
+            
+        if not isinstance(param, str):
+            raise TypeError("Параметр name должен быть строкой")
+        
+        if  len(param) > 10:
+            correct_name = "".join(param[:10])
+            return correct_name 
+    
+        return param
+            
+            
+    @classmethod
+    def __verify_param(cls, value: Any):
+        """Верификация данных поступаемых в параметры класса
+
+        Args:
+            param (any): значение поступающее в поле
+            
+            _price проверят цисло и дробь а так же значение меньше нуля"""
+            
+        if not isinstance(value, int|float):
                 raise TypeError("Параметр 'Цена' ожидал цисло с плавающей точкой или целое число")
-            if param <= 0.0:
+        if value <= 0.0:
                 raise ValueError("Параметр 'Цена' не может быть ноль или меньше нуля")
+    
+    
+    @classmethod
+    def __verify_quantity(cls, value: Any):
+        """Верификация данных поступаемых в параметры класса
+
+        Args:
+            param (any): значение поступающее в поле
             
-        if name == "__quantity":
-            if not isinstance(param, int):
-                raise TypeError("Параметр 'Количество' ожидал цисло")
-            if param < 0:
-                raise ValueError("Параметр 'Количество' не может быть меньше нуля")
-    
-    
+            _quantity проверят цисло и значение меньше нуля"""
+            
+        if not isinstance(value, int):
+            raise TypeError("Параметр 'Количество' ожидал цисло")
+        if value < 0:
+            raise ValueError("Параметр 'Количество' не может быть меньше нуля")
+        
+        
     def __set_name__(self, owner, name: str) -> None:
         """Модифицирует имя поля для инкапсуляции
         """        
         self.name = "__" + name
         
         
-    def __get__(self, instance, owner) -> (str|float|int):
+    def __get__(self, instance, owner) -> Any:
         """Получения значения из поля
         """   
              
@@ -45,9 +71,17 @@ class Parametr:
     def __set__(self, instance, value) -> None:
         """Назначение значения в поле
         """    
+        if self.name == "__name":
+            result = self.__verify_name(value)
+            setattr(instance, self.name, result)
             
-        self.__verify_param(self.name, value)
-        setattr(instance, self.name, value)
+        if self.name == "__price":
+            self.__verify_param(value)
+            setattr(instance, self.name, value)
+            
+        if self.name == "__quantity":
+            self.__verify_quantity(value)
+            setattr(instance, self.name, value)
               
 
 class Item:
@@ -57,7 +91,7 @@ class Item:
     
     pay_rate = 1.0
     all = []
-    
+    name = Parametr()
     price = Parametr()
     quantity = Parametr()
 
@@ -88,30 +122,6 @@ class Item:
         
         if cof < 0:
             raise ValueError("Скидка: Ожидалось значение больше нуля")
-    
-    
-    @classmethod
-    def __validate_name(cls, name: str) -> (str):
-        """Валидация данных на строку и длину меньше 10 символов
-
-        Args:
-            name (str): Получает данные для обработки
-
-        Raises:
-            TypeError: Если не строка возращает исключение
-
-        Returns:
-            str: Возращает обработанный объект в случае если длина больше 10
-        """  
-              
-        if not isinstance(name, str):
-            raise TypeError("Параметр name должен быть строкой")
-        
-        if  len(name) > 10:
-            correct_name = "".join(name[:10])
-            return correct_name 
-        
-        return name
         
         
     @classmethod
@@ -122,15 +132,6 @@ class Item:
             [(cls(item['name'], item['price'], item['quantity'])) for item in file]
         
         
-    @property
-    def name(self) -> str:
-        return self.__name
-    
-    @name.setter
-    def name(self, name: str):
-        self.__name = self.__validate_name(name)
-
-
     def calculate_total_price(self) -> float:
         """
         Рассчитывает общую стоимость конкретного товара в магазине.
@@ -148,6 +149,7 @@ class Item:
         
         self.__validate_discount(self.pay_rate)
         self.price *= self.pay_rate
+        
     
     @staticmethod
     def string_to_number(string: str):
