@@ -32,7 +32,7 @@ class Parametr:
         Args:
             param (any): значение поступающее в поле
             
-            _price проверят цисло и дробь а так же значение меньше нуля"""
+            __price проверят цисло и дробь а так же значение меньше нуля"""
             
         if not isinstance(value, int|float):
                 raise TypeError("Параметр 'Цена' ожидал цисло с плавающей точкой или целое число")
@@ -47,15 +47,30 @@ class Parametr:
         Args:
             param (any): значение поступающее в поле
             
-            _quantity проверят цисло и значение меньше нуля"""
+            __quantity проверят цисло и значение меньше нуля"""
             
         if not isinstance(value, int):
             raise TypeError("Параметр 'Количество' ожидал цисло")
         if value < 0:
             raise ValueError("Параметр 'Количество' не может быть меньше нуля")
+    
+        
+    @classmethod
+    def __verify_number_of_sim(cls, value: Any):
+        """Верификация данных поступаемых в параметры класса
+
+        Args:
+            param (any): значение поступающее в поле
+            
+            __number_of_sim проверят цисло и значение меньше или равно нуля"""
+            
+        if not isinstance(value, int):
+            raise TypeError('Параметр "Количество карт" ожидал число')
+        if value <= 0:
+           raise ValueError("Количество физических SIM-карт должно быть целым числом больше нуля.") 
         
         
-    def __set_name__(self, owner, name: str) -> None:
+    def __set_name__(self, wner, name: str) -> None:
         """Модифицирует имя поля для инкапсуляции
         """        
         self.name = "__" + name
@@ -81,6 +96,10 @@ class Parametr:
             
         if self.name == "__quantity":
             self.__verify_quantity(value)
+            setattr(instance, self.name, value)
+            
+        if self.name == "__number_of_sim":
+            self.__verify_number_of_sim(value)
             setattr(instance, self.name, value)
               
 
@@ -115,7 +134,10 @@ class Item:
         self.price = self.string_to_number(price)
         self.quantity = self.string_to_number(quantity)
         
-     
+    def __add__(self, other):
+        if issubclass(other.__class__, self.__class__):
+            return self.quantity + other.quantity
+            
     @classmethod
     def __validate_discount(cls, cof: int|float):
         if not isinstance(cof, int|float):
