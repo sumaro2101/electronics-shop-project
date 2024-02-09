@@ -12,7 +12,8 @@ class TestAll:
 
         Args:
             items (fixture): инициализация трех элементов
-        """        
+        """     
+        
         assert len(Item.all) == 3    
         
     
