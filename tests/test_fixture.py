@@ -44,6 +44,15 @@ class TestFixture:
         
         assert init_phone.number_of_sim == 2
         
+    def test_fixture_language(self, init_keyboard):
+        """Тестирует наличие поля количество сим карт
+
+        Args:
+            init_phone (fixture): инициализированный тестовый под-класс
+        """     
+        
+        assert init_keyboard.language == 'EN'
+        
         
     def test_fixture_csv(self, csv_file):
         with csv_file.open() as f:
