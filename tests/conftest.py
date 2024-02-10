@@ -2,6 +2,7 @@ import pytest
 from csv import DictWriter
 from src.item import Item
 from src.phone import Phone
+from src.keyboard import Keyboard
 
 @pytest.fixture(scope='class')
 def init_item():
@@ -12,6 +13,11 @@ def init_item():
 def init_phone():
     phone = Phone("Phone", "100", "5", "2")
     return phone
+
+@pytest.fixture(scope='class')
+def init_keyboard():
+    keyboard = Keyboard("Keyboard", "30", "2")
+    return keyboard
 
 @pytest.fixture(scope='class')
 def items():

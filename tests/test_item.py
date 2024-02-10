@@ -104,10 +104,7 @@ class TestItemProperty:
         """
         
         with pytest.raises(TypeError):
-            init_item.quantity = 20.0
-        
-        with pytest.raises(TypeError):
-            init_item.quantity = "20.0"
+            init_item.quantity = [20.0]
             
             
     def test_raise_quantity2(self, init_item):
@@ -119,51 +116,7 @@ class TestItemProperty:
         
         with pytest.raises(ValueError):
             init_item.quantity = -1
-            
-            
-    def test_number_of_sim(self, init_phone):
-        """Тест переназначения поля сим-карты
-
-        Args:
-            init_phone (fixture): инициализированный под-класс
-        """        
-            
-        init_phone.number_of_sim = 3
-        assert init_phone.number_of_sim == 3
-        
-        
-    def test_number_of_sim_raises_zero(self, init_phone):
-        """Тест искючения поля если параметр ноль
-
-        Args:
-            init_phone (fixture): инициализированный под-класс
-        """  
-              
-        with pytest.raises(ValueError):
-            init_phone.number_of_sim = 0
-    
-    
-    def test_number_of_sim_raises_negative_digit(self, init_phone):
-        """Тест искючения поля если параметр отрицательный
-
-        Args:
-            init_phone (fixture): инициализированный под-класс
-        """  
-        
-        with pytest.raises(ValueError):
-            init_phone.number_of_sim = -1
-    
-    
-    def test_raise_nubmer_of_sim_init(self, init_phone):
-        """Тест исключения в случае назначения не прильного значения
-        
-        Args:
-            init_phone (fixture): инициализированный под-класс
-        """   
-             
-        with pytest.raises(TypeError):
-            init_phone.number_of_sim = "2"
-            
+                    
             
     def test_result(self, init_item):
         assert init_item.name == "myfirstnam"

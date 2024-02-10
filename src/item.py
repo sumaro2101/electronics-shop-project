@@ -26,7 +26,7 @@ class Parametr:
             
             
     @classmethod
-    def __verify_param(cls, value: Any):
+    def __verify_price(cls, value: Any):
         """Верификация данных поступаемых в параметры класса
 
         Args:
@@ -55,22 +55,7 @@ class Parametr:
             raise ValueError("Параметр 'Количество' не может быть меньше нуля")
     
         
-    @classmethod
-    def __verify_number_of_sim(cls, value: Any):
-        """Верификация данных поступаемых в параметры класса
-
-        Args:
-            param (any): значение поступающее в поле
-            
-            __number_of_sim проверят цисло и значение меньше или равно нуля"""
-            
-        if not isinstance(value, int):
-            raise TypeError('Параметр "Количество карт" ожидал число')
-        if value <= 0:
-           raise ValueError("Количество физических SIM-карт должно быть целым числом больше нуля.") 
-        
-        
-    def __set_name__(self, wner, name: str) -> None:
+    def __set_name__(self, owner, name: str) -> None:
         """Модифицирует имя поля для инкапсуляции
         """        
         self.name = "__" + name
@@ -91,17 +76,13 @@ class Parametr:
             setattr(instance, self.name, result)
             
         if self.name == "__price":
-            self.__verify_param(value)
+            self.__verify_price(value)
             setattr(instance, self.name, value)
             
         if self.name == "__quantity":
             self.__verify_quantity(value)
             setattr(instance, self.name, value)
             
-        if self.name == "__number_of_sim":
-            self.__verify_number_of_sim(value)
-            setattr(instance, self.name, value)
-              
 
 class Item:
     """
