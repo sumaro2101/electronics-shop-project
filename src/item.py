@@ -7,7 +7,7 @@ class Parametr:
     """    
     
     @classmethod
-    def __verify_name(cls, param: Any) -> None| str:
+    def _verify_name(cls, param: Any) -> None| str:
         """Верификация данных поступаемых в параметры класса
 
         Args:
@@ -58,7 +58,7 @@ class Parametr:
     def __set_name__(self, owner, name: str) -> None:
         """Модифицирует имя поля для инкапсуляции
         """        
-        self.name = "__" + name
+        self.name = "_" + name
         
         
     def __get__(self, instance, owner) -> Any:
@@ -71,15 +71,15 @@ class Parametr:
     def __set__(self, instance, value) -> None:
         """Назначение значения в поле
         """    
-        if self.name == "__name":
-            result = self.__verify_name(value)
+        if self.name == "_name":
+            result = self._verify_name(value)
             setattr(instance, self.name, result)
             
-        if self.name == "__price":
+        if self.name == "_price":
             self.__verify_price(value)
             setattr(instance, self.name, value)
             
-        if self.name == "__quantity":
+        if self.name == "_quantity":
             self.__verify_quantity(value)
             setattr(instance, self.name, value)
             
@@ -88,7 +88,7 @@ class Item:
     """
     Класс для представления товара в магазине.
     """
-    
+    __slots__ = ('_name', '_price', '_quantity')
     pay_rate = 1.0
     all = []
     
@@ -115,9 +115,11 @@ class Item:
         self.price = self.string_to_number(price)
         self.quantity = self.string_to_number(quantity)
         
-    def __add__(self, other):
+        
+    def __add__(self, other) -> int:
         if issubclass(other.__class__, self.__class__):
             return self.quantity + other.quantity
+            
             
     @classmethod
     def __validate_discount(cls, cof: int|float):
@@ -129,7 +131,7 @@ class Item:
         
         
     @classmethod
-    def instantiate_from_csv(cls, csv):
+    def instantiate_from_csv(cls, csv: str) -> None:
         with open(csv, 'r+t') as f:
             file = DictReader(f)
             cls.all = []
@@ -143,8 +145,8 @@ class Item:
         :return: Общая стоимость товара.
         """
         
-        __summary_price = self.price * self.quantity
-        return __summary_price
+        summary_price = self.price * self.quantity
+        return summary_price
     
 
     def apply_discount(self) -> None:
@@ -157,7 +159,7 @@ class Item:
         
     
     @staticmethod
-    def string_to_number(string: str):
+    def string_to_number(string: str) -> int|float:
         if isinstance(string, int):
             return string
         
