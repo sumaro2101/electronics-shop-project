@@ -58,4 +58,9 @@ class TestFixture:
         with csv_file.open() as f:
             file = DictReader(f)
             assert list(file)[0]['name'] == 'myrandom'
+            
+    def test_error_fixture_csv(self, error_csv_file):
+        with error_csv_file.open() as f:
+            file = DictReader(f)
+            assert len(file.fieldnames) == 3
         

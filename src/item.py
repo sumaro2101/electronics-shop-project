@@ -2,6 +2,10 @@ from csv import DictReader
 from math import floor
 from typing import Any
 
+class InstantiateCSVError(Exception):
+    """Класс-исключение для метода CSV"""
+
+
 class Parametr:
     """Дексриптор данных
     """    
@@ -131,11 +135,19 @@ class Item:
         
         
     @classmethod
-    def instantiate_from_csv(cls, csv: str) -> None:
-        with open(csv, 'r+t') as f:
-            file = DictReader(f)
-            cls.all = []
-            [(cls(item['name'], item['price'], item['quantity'])) for item in file]
+    def instantiate_from_csv(cls, csv: str="") -> None:
+        try:
+            with open(csv, 'r+t') as f:
+                try:
+                    file = DictReader(f)
+                    cls.all = []
+                    [(cls(item['name'], item['price'], item['quantity'])) for item in file]
+                    
+                except (ValueError, KeyError):
+                    raise InstantiateCSVError(f"Файл {csv} поврежден")
+                
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Отсутствует файл {csv}")
         
         
     def calculate_total_price(self) -> float:
@@ -164,7 +176,7 @@ class Item:
             return string
         
         if not isinstance(string, str):
-            raise TypeError("Функция ожидала строку")
+            raise TypeError(f"Функция ожидала строку, получила {type(string)}")
         
         if not string.isdigit():
             try:
