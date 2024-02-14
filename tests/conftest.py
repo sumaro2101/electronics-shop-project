@@ -54,3 +54,20 @@ def csv_file(tmpdir_factory):
         file_csv.writerows(file_to_csv)
         
     return temp_file
+
+@pytest.fixture(scope='function')
+def error_csv_file(tmpdir_factory):
+    file_to_csv = [{
+        'name': 'myrandom',
+        'price': 100,
+        'quantity': 1
+        }
+        ]
+    temp_file = tmpdir_factory.mktemp("data").join("test_csv")
+    print(temp_file)
+    with temp_file.open('t+w') as f:
+        file_csv = DictWriter(f, ('name', 'price', 'quantity'))
+        file_csv.writerow({'name': 'name', 'price': 'price'})
+        file_csv.writerows(file_to_csv)
+        
+    return temp_file
